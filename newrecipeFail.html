@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+</head>
+
+<body>
+	<h1>Add a New Recipe</h1>
+	<label for="RecipeName">Recipe Name</label>
+	<input id="RecipeName" name="RecipeName" type="text">
+	<label for="RecipeLocation">Recipe Location</label>
+	<input id="RecipeLocation" name="RecipeLocation" type="text">
+	<label for="MealType">Meal Type</label>
+	<input id="MealType" name="MealType" type="number">
+
+	<button id="AddRecipe">Add</button>
+
+
+	<h3>Version 2</h3>
+	<form action="/api/AddRecipe" method="post">
+		<label for="RecipeName">Recipe Name</label>
+		<input id="RecipeName" name="RecipeName" type="text">
+		<label for="RecipeLocation">Recipe Location</label>
+		<input id="RecipeLocation" name="RecipeLocation" type="text">
+		<label for="MealType">Meal Type</label>
+		<input id="MealType" name="MealType" type="number">
+		<input type="submit">
+	</form>
+
+</body>
+
+<script>
+	$('#AddRecipe').on('click', function () {
+
+		var recipeData = {
+			RecipeName: $('#RecipeName').val(),
+			RecipeLocation: $('#RecipeLocation').val(),
+			MealType: $('#MealType').val()
+
+		}
+
+		$.post("api/AddRecipe", function (recipeData, status) {
+			console.log(status)
+		});
+
+
+		console.log(recipeData)
+	})
+</script>
+
+</html>

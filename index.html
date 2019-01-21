@@ -6,6 +6,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Document</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+	 crossorigin="anonymous">
+
 
 	<style>
 		.mealList {
@@ -23,43 +26,58 @@
 	</style>
 
 <body>
-	<h1>Meal Planner</h1>
-	<p>Planning meals can be a real challenge. The goal of this app is to help make planning meals quick and easy. You
-		decide your favorite meals and it will randomly choose for you which ones to have on a given day.</p>
-	<section>
-		<ul id="mealList" class="mealList">
-			<li id="sunday" class="dinnerList">
-			</li>
-			<li id="monday" class="dinnerList">
+	<div class="container">
 
-			</li>
-			<li id="tuesday" class="dinnerList">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<ul class="navbar-nav">
+				<li class="nav-item ">
+					<a class="nav-link" href="/">Home </a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="newrecipe">Add a New Recipe</a>
+				</li>
+			</ul>
+		</nav>
+		<h1>Meal Planner</h1>
+		<p>Planning meals can be a real challenge. The goal of this app is to help make planning meals quick and easy. You
+			decide your favorite meals and it will randomly choose for you which ones to have on a given day.</p>
+		<section>
+			<ul id="mealList" class="mealList">
+				<li id="sunday" class="dinnerList">
+				</li>
+				<li id="monday" class="dinnerList">
 
-			</li>
-			<li id="wednesday" class="dinnerList">
+				</li>
+				<li id="tuesday" class="dinnerList">
 
-			</li>
-			<li id="thursday" class="dinnerList">
+				</li>
+				<li id="wednesday" class="dinnerList">
 
-			</li>
-			<li id="friday" class="dinnerList">
+				</li>
+				<li id="thursday" class="dinnerList">
 
-			</li>
-			<li id="saturday" class="dinnerList">
+				</li>
+				<li id="friday" class="dinnerList">
 
-			</li>
-		</ul>
-	</section>
+				</li>
+				<li id="saturday" class="dinnerList">
 
-	<footer>
-		Release 1.1
-		<br>
-		<br>
-		Known Bugs
-		<ul>
-			<li>Sorting Errors Out</li>
-		</ul>
-	</footer>
+				</li>
+			</ul>
+			<button id="scanRecipes">Generate New List</button>
+		</section>
+
+		<footer>
+			Release 1.1
+			<br>
+			<br>
+			Known Bugs
+			<ul>
+				<li>Sorting Errors Out</li>
+			</ul>
+		</footer>
+	</div>
+
 </body>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="assets/js/recipes.js"></script>
@@ -69,29 +87,60 @@
 		recipeChosenAlready,
 		recipeCount = recipes.length,
 		daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-		x;
+		x,
+		savedRecipes;
 	$(document).ready(function () {
-		generateRecipeDisplay()
+		getSavedRecipeCount()
+		console.log(savedRecipes)
 	})
 
 	function generateRecipeDisplay() {
 		$('.dinnerList').each(function (i, val) {
+			//Clear list
+			$(val).html(' ');
+
 			randomNumber()
 			if (x == "ChooseNewRecipe") {
 				randomNumber()
 				if (x !== "ChooseNewRecipe") {
-					$(val).append("<b>" + daysOfWeek[i] + "</b><br>" + recipes[x].name)
+					$.get("/api/getRecipes" + x, function (data) {
+						console.log(data)
+						data.forEach(function (Recipe) {
+							console.log(Recipe.RecipeName)
+							$(val).append("<b>" + daysOfWeek[i] + "</b><br><h5>" + Recipe.RecipeName + "</h5>" + Recipe.RecipeLocation +
+								", " + Recipe.MealType)
+
+						})
+					})
 				} else {
 					randomNumber()
 					if (x !== "ChooseNewRecipe") {
-						$(val).append("<b>" + daysOfWeek[i] + "</b><br>" + recipes[x].name)
+						$(val).$.get("/api/getRecipes" + x, function (data) {
+							console.log(data)
+							data.forEach(function (Recipe) {
+								console.log(Recipe.RecipeName)
+								$(val).append("<b>" + daysOfWeek[i] + "</b><br><h5>" + Recipe.RecipeName + "</h5>" + Recipe.RecipeLocation +
+									", " + Recipe.MealType)
+
+							})
+						})
+
 					} else {
 
 					}
 
 				}
 			} else {
-				$(val).append("<b>" + daysOfWeek[i] + "</b><br>" + recipes[x].name)
+				$.get("/api/getRecipes" + x, function (data) {
+					console.log(data)
+					data.forEach(function (Recipe) {
+						console.log(Recipe.RecipeName)
+						$(val).append("<b>" + daysOfWeek[i] + "</b><br><h5>" + Recipe.RecipeName + "</h5>" + Recipe.RecipeLocation +
+							", " + Recipe.MealType)
+
+					})
+				})
+
 
 			}
 		})
@@ -99,7 +148,7 @@
 	}
 
 	function randomNumber() {
-		var randomNumber = Math.floor(Math.random() * recipeCount)
+		var randomNumber = Math.floor(Math.random() * savedRecipes)
 		var numbExists = chosenRecipes.includes(randomNumber)
 
 		if (numbExists) {
@@ -111,6 +160,27 @@
 			return x
 		}
 
+	}
+
+	function getSavedRecipeCount() {
+		$.get("/api/getFoodList", function (data) {
+			savedRecipes = data.length;
+			console.log(savedRecipes)
+		})
+	}
+
+	$('#scanRecipes').on('click', function () {
+		$('#scanRecipes').html('Refresh List')
+
+		generateRecipeDisplay()
+
+	})
+
+	function getRecipeInfo(id) {
+		$.get("/api/getRecipes" + id, function (data) {
+			savedRecipes = data.length;
+			console.log(savedRecipes)
+		})
 	}
 </script>
 

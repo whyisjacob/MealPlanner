@@ -1,0 +1,32 @@
+{
+  "name": "ldsconf",
+  "version": "1.0.0",
+  "description": "A fun site about LDS General Conference",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/whyisjacob/LDSConf.git"
+  },
+  "keywords": [
+    "LDS",
+    "General",
+    "Conference"
+  ],
+  "author": "Jacob Hershberger / TheHashbrown Creative Services",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/whyisjacob/LDSConf/issues"
+  },
+  "homepage": "https://github.com/whyisjacob/LDSConf#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mysql": "^2.15.0",
+    "path": "^0.12.7",
+    "request": "^2.83.0"
+  }
+}
