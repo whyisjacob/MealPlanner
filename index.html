@@ -7,92 +7,109 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Document</title>
 
+	<style>
+		.mealList {
+			list-style: none;
+			font-family: Arial, Helvetica, sans-serif;
+		}
+
+		.mealList>li {
+			margin: 10px;
+		}
+
+		.mealList>li>b {
+			color: darkorange;
+		}
+	</style>
 
 <body>
 	<h1>Meal Planner</h1>
 	<p>Planning meals can be a real challenge. The goal of this app is to help make planning meals quick and easy. You
 		decide your favorite meals and it will randomly choose for you which ones to have on a given day.</p>
-<section>
-	<ul id="mealList">
-		<li id="sunday" class="dinnerList">
-			<b>sunday</b>
-		</li>
-		<li id="monday" class="dinnerList">
-			<b>Monday</b>
+	<section>
+		<ul id="mealList" class="mealList">
+			<li id="sunday" class="dinnerList">
+			</li>
+			<li id="monday" class="dinnerList">
 
-		</li>
-		<li id="tuesday" class="dinnerList">
-			<b>tuesday</b>
+			</li>
+			<li id="tuesday" class="dinnerList">
 
-		</li>
-		<li id="wednesday" class="dinnerList">
-			<b>wednesday</b>
+			</li>
+			<li id="wednesday" class="dinnerList">
 
-		</li>
-		<li id="thursday" class="dinnerList">
-			<b>thursday</b>
+			</li>
+			<li id="thursday" class="dinnerList">
 
-		</li>
-		<li id="friday" class="dinnerList">
-			<b>friday</b>
+			</li>
+			<li id="friday" class="dinnerList">
 
-		</li>
-		<li id="saturday" class="dinnerList">
-			<b>saturday</b>
+			</li>
+			<li id="saturday" class="dinnerList">
 
-		</li>
-	</ul>
-</section>
+			</li>
+		</ul>
+	</section>
 
 	<footer>
-		Release 1.0
+		Release 1.1
 		<br>
 		<br>
 		Known Bugs
 		<ul>
-				<li>Duplicate Recipe Listings</li>
-				<li>Sorting Errors Out</li>
-			</ul>
+			<li>Sorting Errors Out</li>
+		</ul>
 	</footer>
 </body>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="assets/js/recipes.js"></script>
 
 <script>
-	var chosenRecipes = []
-	var recipeChosenAlready;
+	var chosenRecipes = [],
+		recipeChosenAlready,
+		recipeCount = recipes.length,
+		daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+		x;
 	$(document).ready(function () {
-		var recipeCount = recipes.length;
-		var randomNumber = Math.floor(Math.random() * 6) + 1
-		console.log(recipes)
-
-		$('.dinnerList').each(function (i, val) {
-			randomNumber = Math.floor(Math.random() * recipeCount) + 1
-			chosenRecipes.push(randomNumber)
-			checkarray(randomNumber)
-			if (recipeChosenAlready == false) {
-				$(val).attr("RecipeNum", randomNumber)
-				$(val).append("<br>" + recipes[randomNumber].name)
-
-			} else {
-				randomNumber = Math.floor(Math.random() * recipeCount) + 1
-				chosenRecipes.push(randomNumber)
-				checkarray(randomNumber)
-
-			}
-		})
+		generateRecipeDisplay()
 	})
 
-
-	function checkarray(ID) {
+	function generateRecipeDisplay() {
 		$('.dinnerList').each(function (i, val) {
-			var x = $(val).attr('recipenum');
-			if (x == ID) {
-				recipeChosenAlready = true;
+			randomNumber()
+			if (x == "ChooseNewRecipe") {
+				randomNumber()
+				if (x !== "ChooseNewRecipe") {
+					$(val).append("<b>" + daysOfWeek[i] + "</b><br>" + recipes[x].name)
+				} else {
+					randomNumber()
+					if (x !== "ChooseNewRecipe") {
+						$(val).append("<b>" + daysOfWeek[i] + "</b><br>" + recipes[x].name)
+					} else {
+
+					}
+
+				}
 			} else {
-				recipeChosenAlready = false;
+				$(val).append("<b>" + daysOfWeek[i] + "</b><br>" + recipes[x].name)
+
 			}
 		})
+
+	}
+
+	function randomNumber() {
+		var randomNumber = Math.floor(Math.random() * recipeCount)
+		var numbExists = chosenRecipes.includes(randomNumber)
+
+		if (numbExists) {
+			x = "ChooseNewRecipe"
+			return x
+		} else {
+			chosenRecipes.push(randomNumber)
+			x = randomNumber
+			return x
+		}
 
 	}
 </script>
