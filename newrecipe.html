@@ -40,7 +40,18 @@
 		</form>
 
 		<h2>All Recipes</h2>
-		<table id="existing" class="table">
+		<table id="existing_recipes" class="table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Name</th>
+					<th>Meal Source</th>
+					<th>Meal Type</th>
+				</tr>
+			</thead>
+			<tbody id="existing">
+
+			</tbody>
 
 		</table>
 	</div>
@@ -69,11 +80,9 @@
 
 	$('document').ready(function () {
 		$.get("/api/getFoodList", function (data) {
-			console.log(data)
 			var recipeData = data;
 
 			recipeData.forEach(function (element) {
-				console.log(element);
 				$('#existing').append('<tr><td>' +
 					element.id + "</td><td>" +
 					element.RecipeName + "</td><td>" +
@@ -81,7 +90,7 @@
 					element.MealType + "</td></tr>")
 
 			});
-			$('#existing').DataTable();
+			$('#existing_recipes').DataTable();
 
 		});
 	})
