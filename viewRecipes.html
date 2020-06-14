@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+		integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<link rel="stylesheet" href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+</head>
+
+<body>
+	<div class="container">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<ul class="navbar-nav">
+				<li class="nav-item ">
+					<a class="nav-link" href="/">Home </a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="newrecipe">Add a New Recipe</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="ViewRecipies">View All Recipes</a>
+				</li>
+			</ul>
+		</nav>
+
+
+		<h1>All Recipes</h1>
+		<table id="existing_recipes" class="table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Name</th>
+					<th>Meal Source</th>
+					<th>Meal Type</th>
+				</tr>
+			</thead>
+			<tbody id="existing">
+
+			</tbody>
+
+		</table>
+	</div>
+
+
+</body>
+<script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+<script>
+	$('document').ready(function () {
+		$.get("/api/getFoodList", function (data) {
+			var recipeData = data;
+
+			recipeData.forEach(function (element) {
+				$('#existing').append('<tr><td>' +
+					element.id + "</td><td>" +
+					element.RecipeName + "</td><td>" +
+					element.RecipeLocation + "</td><td>" +
+					element.MealType + "</td></tr>")
+
+			});
+			$('#existing_recipes').DataTable();
+
+		});
+	})
+</script>
+
+</html>

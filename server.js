@@ -52,22 +52,67 @@ app.get("/", function (req, res) {
 app.get('/NewRecipe', function (req, res) {
 	res.sendFile(path.join(__dirname, "newrecipe.html"));
 })
+app.get('/ViewRecipies', function (req, res) {
+	res.sendFile(path.join(__dirname, "viewRecipes.html"));
+})
 
-app.post('/AddRecipe', function (request, response) {
-	var recipeData = request.body;
-	console.log(recipeData)
+app.post('/api/AddRecipe', function (request, response) {
+	var rd = request.body;
+  
 
-	// var questionSumNum = questionData.questionsSum;
-	// questionSumNum = parseInt(questionSumNum)
+	RecipeName = rd['recipeData[RecipeName]'],
+	RecipeLocation = rd['recipeData[RecipeLocation]'],
+	MealType = rd['recipeData[MealType]']
+
+	if (RecipeName == '') {
+		error = {
+			errorCode: "REC001",
+			error: "please send a value for RecipeName",
+			received: RecipeName,
+			accepted_value: 'string'
+		}
+		response.status(400).json(error);
+		throw new Error("CODE: "+error.errorCode + ' ' + error.error)
+
+	} 
+	if (RecipeLocation == '') {
+		error = {
+			errorCode: "REC002",
+			error: "please send a value for RecipeLocation",
+			received: RecipeLocation,
+			accepted_value: 'string'
+		}
+		response.status(400).json(error);
+		throw new Error("CODE: " + error.errorCode + ' ' + error.error)
+	} 
+	switch(MealType){
+		case '1': //breakfast
+		case '2': //lunch
+		case '3': //dinner
+			console.log('success')
+			break;
+		default:
+			error = {
+				errorCode: "REC003",
+				error: "please send an int for MealType",
+				received: MealType,
+				accepted_value: '1, 2, 3,'
+			}
+			response.status(400).json(error);
+			throw new Error("CODE: " + error.errorCode + ' ' + error.error)
+	}
+
+	response.sendStatus(200);
 
 	var recipeSendData = {
-		RecipeName: recipeData.RecipeName,
-		RecipeLocation: recipeData.RecipeLocation,
-		MealType: recipeData.MealType
+		RecipeName: rd['recipeData[RecipeName]'],
+		RecipeLocation: rd['recipeData[RecipeLocation]'],
+		MealType: rd['recipeData[MealType]']
 	}
-	console.log("===========")
+
 	console.log(recipeSendData)
 
+	//Add it to the DB
 	connection.query("INSERT INTO Recipes SET ?", recipeSendData, function (err, result) {
 		if (err) {
 			// If an error occurred, send a generic server failure
@@ -92,10 +137,9 @@ app.get('/api/getFoodList', function (request, response) {
 			console.log(' not successful')
 			// return res.status(500).end();
 		} else {
-			console.log('grabbed data')
+			console.log('grabbed getFoodList data')
 			var data = result
 
-			console.log(data)
 
 
 			response.json(data)
@@ -112,17 +156,15 @@ app.get('/api/getRecipeCount', function (request, response) {
 		} else {
 			console.log('grabbed data')
 			var data = result
-
-			console.log(data)
-
-
 			response.json(data)
 		}
 	});
 
 })
-
-app.get('/api/getRecipes:id', function (request, response){
+/**
+ * Get recipes by ID
+ */
+app.get('/api/getRecipes:id', function (request, response) {
 	console.log(request.params.id)
 	var recipeId = request.params.id
 	connection.query('SELECT * FROM Recipes WHERE id = ?', recipeId, function (error, results, fields) {
@@ -132,10 +174,51 @@ app.get('/api/getRecipes:id', function (request, response){
 			// return res.status(500).end();
 		} else {
 			console.log('grabbed data')
-
-			console.log(results)
-
-
+			response.json(results)
+		}
+	});
+})
+/**
+ * Get All breakfast recipes
+ */
+app.get('/api/getBreakfast', function (request, response) {
+	var recipeId = request.params.id
+	connection.query('SELECT * FROM Recipes WHERE MealType = 1', recipeId, function (error, results, fields) {
+		if (error) {
+			// If an error occurred, send a generic server failure
+			console.log('getBreakfast not successful')
+			// return res.status(500).end();
+		} else {
+			response.json(results)
+		}
+	});
+})
+/**
+ * Get All lunch recipes
+ */
+app.get('/api/getLunch', function (request, response) {
+	var recipeId = request.params.id
+	connection.query('SELECT * FROM Recipes WHERE MealType = 2', recipeId, function (error, results, fields) {
+		if (error) {
+			// If an error occurred, send a generic server failure
+			console.log('getLunch not successful')
+			// return res.status(500).end();
+		} else {
+			response.json(results)
+		}
+	});
+})
+/**
+ * Get All dinner recipes
+ */
+app.get('/api/getDinner', function (request, response) {
+	var recipeId = request.params.id
+	connection.query('SELECT * FROM Recipes WHERE MealType = 3', recipeId, function (error, results, fields) {
+		if (error) {
+			// If an error occurred, send a generic server failure
+			console.log('getDinner not successful')
+			// return res.status(500).end();
+		} else {
 			response.json(results)
 		}
 	});
@@ -143,10 +226,8 @@ app.get('/api/getRecipes:id', function (request, response){
 
 app.post('/updatefood', function (request, response) {
 	var updateFoodId = request.body;
-	console.log(updateFoodId)
 
 	var foodId = updateFoodId.foodid;
-	console.log(foodId)
 	var updateFoodToSend = {
 		foodName: updateFoodId.foodid,
 		eaten: 'true'
