@@ -30,12 +30,13 @@
 		
 		<h1>Add a New Recipe</h1>
 		<form action="/AddRecipe" method="post" target="_self">
+			<input type="hidden" name="redirect" value="https://mealplanner-jh.herokuapp.com/newrecipe">
 			<label for="RecipeName">Recipe Name</label>
 			<input id="RecipeName" name="RecipeName" type="text" class="form-control">
 			<label for="RecipeLocation">Recipe Location</label>
 			<input id="RecipeLocation" name="RecipeLocation" type="text" class="form-control">
 			<label for="MealType">Meal Type</label>
-			<input id="MealType" name="MealType" type="number" class="form-control">
+			<input id="MealType" name="MealType" type="text" class="form-control">
 			<input type="submit" class="form-control btn btn-primary">
 		</form>
 
