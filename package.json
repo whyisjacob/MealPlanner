@@ -24,7 +24,7 @@
   "homepage": "https://github.com/whyisjacob/LDSConf#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "express": "^4.16.2",
+    "express": "^4.17.3",
     "mysql": "^2.15.0",
     "nodemon": "^2.0.4",
     "path": "^0.12.7",
